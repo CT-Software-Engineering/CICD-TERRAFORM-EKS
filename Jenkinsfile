@@ -17,7 +17,7 @@ pipeline {
             steps{
                 script{
                     dir('EKS'){
-                         sh 'terraform init -reconfigure'
+                         sh 'terraform init'
                     }
                 }
             }
@@ -59,16 +59,17 @@ pipeline {
                 }
             }
         }
-        stage("Deploying Nginx"){
+        /*stage("Deploying Nginx"){
             steps{
                 script{
                     dir('EKS/configuration-files'){
                         sh 'aws eks update-kubeconfig --name awake'
-                        sh 'kubectl apply -f deployment.yml'
-                        sh 'kubectl apply -f service.yml'
+                        sh 'kubectl apply -f deployment.yml --validate=false'
+                        sh 'kubectl apply -f service.yml --validate=false'
                     }
                 }
             }
         }
+        */
     }
 }
