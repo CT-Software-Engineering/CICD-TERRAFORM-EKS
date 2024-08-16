@@ -8,21 +8,7 @@ pipeline {
 
     stages {
         
-        stage('Grant Admin Access') {
-            steps {
-                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'AWS_ACCESS_KEY_ID']]) {
-                    script {
-                        def clusterName = 'awake'
-                        sh """
-                        aws eks update-kubeconfig --name ${clusterName} --region ${AWS_DEFAULT_REGION}
-                        kubectl create clusterrolebinding jenkins-admin-binding \
-                            --clusterrole=cluster-admin \
-                            --user=arn:aws:iam::851725178273:user/Jenkins
-                        """
-                    }
-                }
-            }
-        }
+        
         
         stage('Checkout SCM') {
             steps {
