@@ -5,6 +5,23 @@ pipeline {
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
         AWS_DEFAULT_REGION = 'eu-west-1'
     }
+    stage('Grant Admin Access') {
+            steps {
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-credentials-id']]) {
+                    script {
+                        def clusterName = 'my-cluster'
+                        sh """
+                        aws eks update-kubeconfig --name ${clusterName} --region ${AWS_DEFAULT_REGION}
+                        kubectl create clusterrolebinding jenkins-admin-binding \
+                            --clusterrole=cluster-admin \
+                            --user=arn:aws:iam::851725178273:user/Jenkins
+                        """
+                    }
+                }
+            }
+        }
+    }
+}
     stages {
         stage('Checkout SCM') {
             steps {

@@ -19,12 +19,12 @@ module "vpc" {
   }
   public_subnet_tags = {
     "kubernetes.io/cluster/awake" = "shared"
-    "kubernetes.io/role/elb"               = 1
+    "kubernetes.io/role/elb"      = 1
 
   }
   private_subnet_tags = {
-    "kubernetes.io/cluster/awake" = "shared"
-    "kubernetes.io/role/private_elb"       = 1
+    "kubernetes.io/cluster/awake"    = "shared"
+    "kubernetes.io/role/private_elb" = 1
 
   }
 }
