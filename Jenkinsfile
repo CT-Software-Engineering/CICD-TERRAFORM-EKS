@@ -116,9 +116,10 @@ pipeline {
                             kubectl apply -f nginx-deployment.yaml -n nginx
                             kubectl apply -f nginx-service.yaml -n nginx
                         '''
-                    }*/
+                    }
                 }
             }
         }
+        */
     }
 }
