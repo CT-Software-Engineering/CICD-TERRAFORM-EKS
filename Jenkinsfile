@@ -61,7 +61,7 @@ pipeline {
                 }
             }
         }
-       stage('Deploying Nginx') {
+       /*stage('Deploying Nginx') {
             steps {
                 withCredentials([[
                     $class: 'AmazonWebServicesCredentialsBinding',
@@ -72,7 +72,7 @@ pipeline {
                             sh 'aws eks update-kubeconfig --name awake'
                             sh 'kubectl apply -f deployment.yml --validate=false'
                             sh 'kubectl apply -f service.yml --validate=false'
-                        }
+                        }*/
                     }
                 }
             }
