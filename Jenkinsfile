@@ -68,8 +68,8 @@ pipeline {
                 script {
                     dir('EKS') {
                         // sh 'terraform $action --auto-approve'
-                        sh 'terraform apply --auto-approve'
-                        // sh 'terraform destroy --auto-approve'
+                        //sh 'terraform apply --auto-approve'
+                        sh 'terraform destroy --auto-approve'
                     }
                 }
             }
@@ -106,7 +106,7 @@ pipeline {
             }
         }
 
-        stage('Install Nginx') {
+        /*stage('Install Nginx') {
             steps {
                 script {
                     dir('EKS/configuration-files') {
@@ -116,7 +116,7 @@ pipeline {
                             kubectl apply -f nginx-deployment.yaml -n nginx
                             kubectl apply -f nginx-service.yaml -n nginx
                         '''
-                    }
+                    }*/
                 }
             }
         }
