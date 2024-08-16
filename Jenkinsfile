@@ -7,9 +7,10 @@ pipeline {
     }
 
     stages {
+        
         stage('Grant Admin Access') {
             steps {
-                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-jenkins-id']]) {
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'AWS_ACCESS_KEY_ID']]) {
                     script {
                         def clusterName = 'awake'
                         sh """
