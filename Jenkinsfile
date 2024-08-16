@@ -61,33 +61,25 @@ pipeline {
                 }
             }
         }
-        stage("Deploying Nginx"){
-            steps{
-                script{
-                    dir('EKS/configuration-files'){
-                        sh 'aws eks update-kubeconfig --name awake'
-                        sh 'kubectl apply -f deployment.yml --validate=false'
-                        sh 'kubectl apply -f service.yml --validate=false'
-                    }
-                }
-            }
-        }
-        
-    
-        stage('Deploy to EKS') {
+       stage('Deploying Nginx') {
             steps {
-                // Inject AWS credentials securely from Jenkins Credentials Store
                 withCredentials([[
                     $class: 'AmazonWebServicesCredentialsBinding',
                     credentialsId: 'aws-credentials-id' // Use the ID you set when adding the credentials
                 ]]) {
-                    // Run your shell commands
-                    sh '''
-                    # Your shell commands here
-                    kubectl apply -f deployment.yml
-                    '''
+                    script {
+                        dir('EKS/configuration-files') {
+                            sh 'aws eks update-kubeconfig --name awake'
+                            sh 'kubectl apply -f deployment.yml --validate=false'
+                            sh 'kubectl apply -f service.yml --validate=false'
+                        }
+                    }
                 }
             }
+        }
+    }
+}
+      }
         }
     }
 }
