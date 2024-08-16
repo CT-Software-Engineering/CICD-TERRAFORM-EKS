@@ -88,6 +88,37 @@ pipeline {
             }
         }
         
+        stage('Initializing Helm') {
+            steps {
+                script {
+                    sh 'helm repo add bitnami https://charts.bitnami.com/bitnami'
+                    sh 'helm repo update'
+                }
+            }
+        }
+        stage('Update Kubeconfig') {
+            steps {
+                script {
+                    sh 'aws eks update-kubeconfig --name awake --kubeconfig "/var/lib/jenkins/workspace/EKS CICD/.kube/config"'
+                }
+            }
+        }
+        stage('Deploying Jenkins') {
+            steps {
+                script {
+                    sh 'helm install jenkins bitnami/jenkins --namespace awake-namespace --create-namespace --kubeconfig "/var/lib/jenkins/workspace/EKS CICD/.kube/config"'
+                }
+            }
+        }
+        stage('Verify Jenkins Deployment') {
+            steps {
+                script {
+                    sh 'kubectl get pods -n awake-namespace --kubeconfig "$KUBECONFIG"'
+                    sh 'kubectl get svc -n awake-namespace --kubeconfig "$KUBECONFIG"'
+                }
+            }
+        }
+
         stage('Install Nginx') {
             steps {
                 script {
