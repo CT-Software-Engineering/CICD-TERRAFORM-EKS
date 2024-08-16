@@ -75,3 +75,20 @@ pipeline {
         
     }
 }
+stage('Deploy to EKS') {
+            steps {
+                // Inject AWS credentials securely from Jenkins Credentials Store
+                withCredentials([[
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'aws-credentials-id' // Use the ID you set when adding the credentials
+                ]]) {
+                    // Run your shell commands
+                    sh '''
+                    # Your shell commands here
+                    kubectl apply -f deployment.yml
+                    '''
+                }
+            }
+        }
+    }
+}
