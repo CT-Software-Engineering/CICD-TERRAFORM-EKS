@@ -55,13 +55,13 @@ pipeline {
                 script{
                     dir('EKS'){
                          //sh 'terraform $action --auto-approve'
-                         //sh 'terraform apply --auto-approve'
-                         sh 'terraform destroy --auto-approve'
+                         sh 'terraform apply --auto-approve'
+                         //sh 'terraform destroy --auto-approve'
                     }
                 }
             }
         }
-        /*stage("Deploying Nginx"){
+        stage("Deploying Nginx"){
             steps{
                 script{
                     dir('EKS/configuration-files'){
@@ -72,6 +72,6 @@ pipeline {
                 }
             }
         }
-        */
+        
     }
 }
