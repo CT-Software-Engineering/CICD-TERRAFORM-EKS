@@ -73,9 +73,8 @@ pipeline {
             }
         }
         
-    }
-}
-stage('Deploy to EKS') {
+    
+        stage('Deploy to EKS') {
             steps {
                 // Inject AWS credentials securely from Jenkins Credentials Store
                 withCredentials([[
