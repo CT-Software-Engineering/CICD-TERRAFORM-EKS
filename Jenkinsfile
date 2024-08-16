@@ -5,11 +5,13 @@ pipeline {
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
         AWS_DEFAULT_REGION = 'eu-west-1'
     }
-    stage('Grant Admin Access') {
+
+    stages {
+        stage('Grant Admin Access') {
             steps {
                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-credentials-id']]) {
                     script {
-                        def clusterName = 'my-cluster'
+                        def clusterName = 'awake'
                         sh """
                         aws eks update-kubeconfig --name ${clusterName} --region ${AWS_DEFAULT_REGION}
                         kubectl create clusterrolebinding jenkins-admin-binding \
@@ -20,65 +22,73 @@ pipeline {
                 }
             }
         }
-    }
-}
-    stages {
+        
         stage('Checkout SCM') {
             steps {
                 script {
-                    checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/CT-Software-Engineering/CICD-TERRAFORM-EKS.git']])
+                    checkout scmGit(
+                        branches: [[name: '*/main']],
+                        extensions: [],
+                        userRemoteConfigs: [[url: 'https://github.com/CT-Software-Engineering/CICD-TERRAFORM-EKS.git']]
+                    )
                 }
             }
         }
-         stage('Initializing Terraform'){
-            steps{
-                script{
-                    dir('EKS'){
-                         sh 'terraform init'
+        
+        stage('Initializing Terraform') {
+            steps {
+                script {
+                    dir('EKS') {
+                        sh 'terraform init'
                     }
                 }
             }
         }
-        stage('Formating terraform code'){
-            steps{
-                script{
-                    dir('EKS'){
-                         sh 'terraform fmt -recursive'
+        
+        stage('Formatting Terraform Code') {
+            steps {
+                script {
+                    dir('EKS') {
+                        sh 'terraform fmt -recursive'
                     }
                 }
             }
         }
-        stage('Validating Terraform'){
-            steps{
-                script{
-                    dir('EKS'){
-                         sh 'terraform validate'
+        
+        stage('Validating Terraform') {
+            steps {
+                script {
+                    dir('EKS') {
+                        sh 'terraform validate'
                     }
                 }
             }
         }
-        stage('Previewing the infrastructure'){
-            steps{
-                script{
-                    dir('EKS'){
-                         sh 'terraform plan'
-                    }
-                    //input(message: "Are you sure to proceed?", ok: "proceed")
-                }
-            }
-        }
-        stage('Creating/Destroying an EKS cluster'){
-            steps{
-                script{
-                    dir('EKS'){
-                         //sh 'terraform $action --auto-approve'
-                         sh 'terraform apply --auto-approve'
-                         //sh 'terraform destroy --auto-approve'
+        
+        stage('Previewing the Infrastructure') {
+            steps {
+                script {
+                    dir('EKS') {
+                        sh 'terraform plan'
+                        // input(message: "Are you sure to proceed?", ok: "proceed")
                     }
                 }
             }
         }
-       stage('Install Nginx') {
+        
+        stage('Creating/Destroying an EKS Cluster') {
+            steps {
+                script {
+                    dir('EKS') {
+                        // sh 'terraform $action --auto-approve'
+                        sh 'terraform apply --auto-approve'
+                        // sh 'terraform destroy --auto-approve'
+                    }
+                }
+            }
+        }
+        
+        stage('Install Nginx') {
             steps {
                 script {
                     dir('EKS/configuration-files') {
