@@ -61,18 +61,16 @@ pipeline {
                 }
             }
         }
-       /*stage('Deploying Nginx') {
+       stage('Install Nginx') {
             steps {
-                withCredentials([[
-                    $class: 'AmazonWebServicesCredentialsBinding',
-                    credentialsId: 'aws-jenkins-id' // Use the ID you set when adding the credentials
-                ]]) {
-                    script {
-                        dir('EKS/configuration-files') {
-                            sh 'aws eks update-kubeconfig --name awake'
-                            sh 'kubectl apply -f deployment.yml --validate=false'
-                            sh 'kubectl apply -f service.yml --validate=false'
-                        }*/
+                script {
+                    dir('EKS/configuration-files') {
+                        sh 'aws eks update-kubeconfig --name awake'
+                        sh '''
+                            kubectl create namespace nginx
+                            kubectl apply -f nginx-deployment.yaml -n nginx
+                            kubectl apply -f nginx-service.yaml -n nginx
+                        '''
                     }
                 }
             }
