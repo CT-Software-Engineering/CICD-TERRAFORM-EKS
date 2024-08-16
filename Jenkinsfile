@@ -65,7 +65,7 @@ pipeline {
             steps {
                 withCredentials([[
                     $class: 'AmazonWebServicesCredentialsBinding',
-                    credentialsId: 'aws-credentials-id' // Use the ID you set when adding the credentials
+                    credentialsId: 'aws-jenkins-id' // Use the ID you set when adding the credentials
                 ]]) {
                     script {
                         dir('EKS/configuration-files') {
