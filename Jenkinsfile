@@ -86,7 +86,7 @@ pipeline {
         }
         
         
-        /*
+        
         stage('Update Kubeconfig') {
             steps {
                 script {
@@ -94,7 +94,7 @@ pipeline {
                 }
             }
         }
-        */
+        
         
         /*
         stage('Deploying Jenkins') {
