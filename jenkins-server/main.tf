@@ -1,4 +1,4 @@
-#Vpc
+# VPC
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
@@ -21,15 +21,13 @@ module "vpc" {
   }
 }
 
-#sg 
-
+# Security Group
 module "sg" {
   source = "terraform-aws-modules/security-group/aws"
 
   name        = "jenkins_sg"
   description = "Security group for jenkins server"
   vpc_id      = module.vpc.vpc_id
-
 
   ingress_with_cidr_blocks = [
     {
@@ -74,8 +72,7 @@ module "sg" {
   }
 }
 
-#ec2
-
+# EC2 Instance
 module "ec2_instance" {
   source = "terraform-aws-modules/ec2-instance/aws"
 
@@ -91,6 +88,10 @@ module "ec2_instance" {
   availability_zone           = data.aws_availability_zones.azs.names[0]
   user_data                   = file("jenkins-install.sh")
 
+  # Increase EBS Volume Size to 20GB
+  root_block_device = [{
+    volume_size = 20
+  }]
 
   tags = {
     Name        = "jenkins_server"
