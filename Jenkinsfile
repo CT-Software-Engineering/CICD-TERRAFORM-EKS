@@ -96,7 +96,7 @@ pipeline {
         }
         
         
-        /*
+        
         stage('Deploying Jenkins') {
             steps {
                 script {
@@ -104,7 +104,7 @@ pipeline {
                 }
             }
         }
-        */
+        
         /*
         stage('Verify Jenkins Deployment') {
             steps {
