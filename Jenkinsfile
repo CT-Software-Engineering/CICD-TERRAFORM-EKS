@@ -75,6 +75,7 @@ pipeline {
             }
         }
         
+        
         stage('Initializing Helm') {
             steps {
                 script {
@@ -83,6 +84,9 @@ pipeline {
                 }
             }
         }
+        
+        
+        /*
         stage('Update Kubeconfig') {
             steps {
                 script {
@@ -90,6 +94,9 @@ pipeline {
                 }
             }
         }
+        */
+        
+        /*
         stage('Deploying Jenkins') {
             steps {
                 script {
@@ -97,6 +104,8 @@ pipeline {
                 }
             }
         }
+        */
+        /*
         stage('Verify Jenkins Deployment') {
             steps {
                 script {
@@ -105,8 +114,10 @@ pipeline {
                 }
             }
         }
+        */
 
-        /*stage('Deploying NGINX') {
+        /*
+                stage('Deploying NGINX') {
             steps {
                 script {
                     dir('EKS/configuration-files') {
