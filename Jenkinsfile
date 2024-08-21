@@ -92,7 +92,7 @@ pipeline {
             }
         }
         
-        
+        /*
         
         stage('Deploying Jenkins') {
             steps {
@@ -101,7 +101,7 @@ pipeline {
                 }
             }
         }
-        
+        */
         /*
         stage('Verify Jenkins Deployment') {
             steps {
