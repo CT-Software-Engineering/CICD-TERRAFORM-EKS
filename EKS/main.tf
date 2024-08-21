@@ -88,7 +88,7 @@ resource "aws_iam_role_policy_attachment" "eks_view_policy_attachment" {
   role       = aws_iam_role.eks_view_role.name
 }
 
-resource "aws_eks_access_entry" "eks_view_access_entry" {
+resource "aws_eks_access_entry" "EKS_Full_Access" {
   cluster_name  = module.eks.cluster_name
   principal_arn = aws_iam_role.eks_view_role.arn
 }
