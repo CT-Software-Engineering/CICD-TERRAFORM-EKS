@@ -62,34 +62,7 @@ data "aws_eks_cluster_auth" "cluster" {
 }
 
 
-data "aws_caller_identity" "current" {}
 
-resource "aws_iam_role" "eks_view_role" {
-  name = "eks-view-role"
 
-  assume_role_policy = <<POLICY
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "AWS": "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
-      },
-      "Action": "sts:AssumeRole"
-    }
-  ]
-}
-POLICY
-}
 
-resource "aws_iam_role_policy_attachment" "eks_view_policy_attachment" {
-  policy_arn = "arn:aws:iam::aws:policy/EKSViewOnlyPolicy"
-  role       = aws_iam_role.eks_view_role.name
-}
-
-resource "aws_eks_access_entry" "EKS_Full_Access" {
-  cluster_name  = module.eks.cluster_name
-  principal_arn = aws_iam_role.eks_view_role.arn
-}
 
