@@ -53,9 +53,9 @@ module "eks" {
   }
 }
 
-data "aws_eks_cluster" "cluster" {
-  name = module.eks.cluster_name
-}
+# data "aws_eks_cluster" "cluster" {
+#   name = module.eks.cluster_name
+# }
 
 data "aws_eks_cluster_auth" "cluster" {
   name = module.eks.cluster_name
@@ -63,64 +63,6 @@ data "aws_eks_cluster_auth" "cluster" {
 
 
 
-# provider "kubernetes" {
-#   host                   = data.aws_eks_cluster.cluster.endpoint
-#   cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority.0.data)
-#   token                  = data.aws_eks_cluster_auth.cluster.token
-# }
 
 
-
-data "aws_caller_identity" "current" {}
-
-resource "aws_iam_role" "eks_view_role" {
-  name = "eks-view-role"
-
-  assume_role_policy = <<POLICY
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "AWS": "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
-      },
-      "Action": "sts:AssumeRole"
-    }
-  ]
-}
-POLICY
-}
-
-resource "aws_iam_role_policy_attachment" "eks_view_policy_attachment" {
-  policy_arn = "arn:aws:iam::aws:policy/EKSViewOnlyPolicy"
-  role       = aws_iam_role.eks_view_role.name
-}
-
-resource "kubernetes_cluster_role" "view_role" {
-  metadata {
-    name = "view-role"
-  }
-  rule {
-    api_groups = [""]
-    resources  = ["pods", "nodes", "services", "persistentvolumeclaims", "persistentvolumes"]
-    verbs      = ["get", "list", "watch"]
-  }
-}
-
-resource "kubernetes_cluster_role_binding" "view_role_binding" {
-  metadata {
-    name = "view-role-binding"
-  }
-  role_ref {
-    api_group = "rbac.authorization.k8s.io"
-    kind      = "ClusterRole"
-    name      = kubernetes_cluster_role.view_role.metadata.0.name
-  }
-  subject {
-    kind      = "User"
-    name      = aws_iam_role.eks_view_role.arn
-    api_group = "rbac.authorization.k8s.io"
-  }
-}
 
