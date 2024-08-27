@@ -83,7 +83,7 @@ pipeline {
         }
         
         
-        /*
+        
         stage('Update Kubeconfig') {
             steps {
                 script {
@@ -91,8 +91,8 @@ pipeline {
                 }
             }
         }
-        */
-        /*
+        
+        
         
         stage('Deploying Jenkins') {
             steps {
@@ -101,8 +101,8 @@ pipeline {
                 }
             }
         }
-        */
-        /*
+        
+        
         stage('Verify Jenkins Deployment') {
             steps {
                 script {
@@ -111,7 +111,7 @@ pipeline {
                 }
             }
         }
-        */
+        
 
         /*
                 stage('Deploying NGINX') {
