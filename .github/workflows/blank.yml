@@ -19,7 +19,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: arn:aws:iam::851725178273:role/Github-EKS
+          role-to-assume: arn:aws:iam::851725178273:role/Github-EKS-OIDC
           role-session-name: EKS
           aws-region: ${{ env.AWS_REGION }}
 
