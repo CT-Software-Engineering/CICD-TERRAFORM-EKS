@@ -120,8 +120,8 @@ pipeline {
         stage('Verify Jenkins Deployment') {
             steps {
                 script {
-                    sh 'kubectl get pods -n awake --kubeconfig "var/lib/jenkins/workspace/EKS CICD/.kube/config"'
-                    sh 'kubectl get svc -n awake --kubeconfig "var/lib/jenkins/workspace/EKS CICD/.kube/config"'
+                    sh 'kubectl get pods -n awake --kubeconfig "/var/lib/jenkins/workspace/EKS CICD/.kube/config"'
+                    sh 'kubectl get svc -n awake --kubeconfig "/var/lib/jenkins/workspace/EKS CICD/.kube/config"'
                 }
             }
         }
