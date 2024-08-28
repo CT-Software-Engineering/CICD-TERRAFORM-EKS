@@ -106,8 +106,8 @@ pipeline {
         stage('Verify Jenkins Deployment') {
             steps {
                 script {
-                    sh 'kubectl get pods -n awake-namespace --kubeconfig "$KUBECONFIG"'
-                    sh 'kubectl get svc -n awake-namespace --kubeconfig "$KUBECONFIG"'
+                    sh 'kubectl get pods -n awake --kubeconfig "$KUBECONFIG"'
+                    sh 'kubectl get svc -n awake --kubeconfig "$KUBECONFIG"'
                 }
             }
         }
