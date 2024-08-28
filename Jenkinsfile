@@ -87,21 +87,21 @@ pipeline {
         stage('Update Kubeconfig') {
             steps {
                 script {
-                    sh 'aws eks update-kubeconfig --name awake --kubeconfig "/var/lib/jenkins/workspace/EKS CICD/.kube/config"'
+                    sh aws eks update-kubeconfig --name awake --kubeconfig "/var/lib/jenkins/workspace/EKS CICD/.kube/config"
                 }
             }
         }
            stage('Check kubeconfig') {
             steps {
                 script {
-                    sh 'ls -l /var/lib/jenkins/workspace/EKS CICD/.kube/config'
+                    sh 'ls -l "/var/lib/jenkins/workspace/EKS CICD/.kube/config"
                 }
             }
         }
          stage('Get Pods') {
             steps {
                 script {
-                    sh 'kubectl get pods -n awake --kubeconfig /var/lib/jenkins/workspace/EKS CICD/.kube/config'
+                    sh kubectl get pods -n awake --kubeconfig "/var/lib/jenkins/workspace/EKS CICD/.kube/config"
                 }
             }
         }
@@ -111,9 +111,9 @@ pipeline {
         stage('Deploying Jenkins') {
             steps {
                 script {
-                    //sh 'helm install jenkins bitnami/jenkins --namespace awake --create-namespace --kubeconfig "/var/lib/jenkins/workspace/EKS CICD/.kube/config"'
-                    sh 'helm upgrade jenkins bitnami/jenkins --namespace awake --create-namespace --kubeconfig "/var/lib/jenkins/workspace/EKS CICD/.kube/config"'
-                    //sh 'helm uninstall jenkins bitnami/jenkins --namespace awake --create-namespace --kubeconfig "/var/lib/jenkins/workspace/EKS CICD/.kube/config"'
+                    //sh helm install jenkins bitnami/jenkins --namespace awake --create-namespace --kubeconfig "/var/lib/jenkins/workspace/EKS CICD/.kube/config"
+                    sh helm upgrade jenkins bitnami/jenkins --namespace awake --create-namespace --kubeconfig "/var/lib/jenkins/workspace/EKS CICD/.kube/config"
+                    //sh helm uninstall jenkins bitnami/jenkins --namespace awake --create-namespace --kubeconfig "/var/lib/jenkins/workspace/EKS CICD/.kube/config"
                 }
             }
         }
