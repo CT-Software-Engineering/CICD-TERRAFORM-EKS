@@ -97,7 +97,7 @@ pipeline {
         stage('Deploying Jenkins') {
             steps {
                 script {
-                    sh 'helm install jenkins bitnami/jenkins --namespace awake-namespace --create-namespace --kubeconfig "/var/lib/jenkins/workspace/EKS CICD/.kube/config"'
+                    sh 'helm install jenkins bitnami/jenkins --namespace awake --create-namespace --kubeconfig "/var/lib/jenkins/workspace/EKS CICD/.kube/config"'
                 }
             }
         }
