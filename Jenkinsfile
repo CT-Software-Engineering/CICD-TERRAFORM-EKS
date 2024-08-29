@@ -77,7 +77,7 @@ pipeline {
             def clusterName = "awake"  // Replace with actual or environment variable
             sh 'helm repo add bitnami https://charts.bitnami.com/bitnami'
             sh 'helm repo update'
-            sh "helm install aws-load-balancer-controller eks/aws-load-balancer-controller --set clusterName=${clusterName} --set serviceAccount.create=false --set serviceAccount.name=aws-load-balancer-controller --namespace kube-system"
+            sh "helm install aws-load-balancer-controller eks/aws-load-balancer-controller --set clusterName=awake --set serviceAccount.create=false --set serviceAccount.name=aws-load-balancer-controller --namespace kube-system"
         }
     }
 }
