@@ -63,43 +63,39 @@ pipeline {
                 script {
                     dir('EKS') {
                         // sh 'terraform $action --auto-approve'
-                        sh 'terraform apply --auto-approve'
-                        //sh 'terraform destroy --auto-approve'
+                        //sh 'terraform apply --auto-approve'
+                        sh 'terraform destroy --auto-approve'
                     }
                 }
             }
         }
         
         
-       stage('Initialize Helm and Install AWS Load Balancer Controller') {
+        stage('Initializing Helm') {
             steps {
-                 script {
-            def clusterName = "awake"  // Replace with actual or environment variable
-            sh 'helm repo add bitnami https://charts.bitnami.com/bitnami'
-            sh 'helm repo update'
-            sh "helm install aws-load-balancer-controller eks/aws-load-balancer-controller --set clusterName=awake --set serviceAccount.create=false --set serviceAccount.name=aws-load-balancer-controller --namespace kube-system"
+                script {
+                    sh 'helm repo add bitnami https://charts.bitnami.com/bitnami'
+                    sh 'helm repo update'
+                }
+            }
         }
-    }
-}
         
-          
+        
+        
         stage('Update Kubeconfig') {
             steps {
                 script {
-                    sh 'aws eks update-kubeconfig --name awake --kubeconfig '"/var/lib/jenkins/workspace/EKS CICD/.kube/config"'
+                    sh 'aws eks update-kubeconfig --name awake --kubeconfig "/var/lib/jenkins/workspace/EKS CICD/.kube/config"'
                 }
             }
         }
-        stage('Check kubeconfig') {
+           stage('Check kubeconfig') {
             steps {
                 script {
-                    sh 'ls -l "/var/lib/jenkins/workspace/EKS\\ CICD/.kube/config"'
+                    sh 'ls -l "/var/lib/jenkins/workspace/EKS CICD/.kube/config"'
                 }
             }
         }
-
-
-
          stage('Get Pods') {
             steps {
                 script {
@@ -113,8 +109,8 @@ pipeline {
         stage('Deploying Jenkins') {
             steps {
                 script {
-                    sh 'helm install jenkins bitnami/jenkins --namespace awake --create-namespace --kubeconfig "/var/lib/jenkins/workspace/EKS CICD/.kube/config"'
-                    //sh 'helm upgrade jenkins bitnami/jenkins --namespace awake --create-namespace --kubeconfig "/var/lib/jenkins/workspace/EKS CICD/.kube/config"'
+                    //sh 'helm install jenkins bitnami/jenkins --namespace awake --create-namespace --kubeconfig "/var/lib/jenkins/workspace/EKS CICD/.kube/config"''
+                    sh 'helm upgrade jenkins bitnami/jenkins --namespace awake --create-namespace --kubeconfig "/var/lib/jenkins/workspace/EKS CICD/.kube/config"'
                     //sh 'helm uninstall jenkins bitnami/jenkins --namespace awake --create-namespace --kubeconfig "/var/lib/jenkins/workspace/EKS CICD/.kube/config"'
                 }
             }
@@ -131,7 +127,7 @@ pipeline {
         }
         
 
-        
+        /*
                 stage('Deploying NGINX') {
             steps {
                 script {
@@ -148,7 +144,6 @@ pipeline {
                     }
                 }
             }
-        
+            */
         }
     }
-
