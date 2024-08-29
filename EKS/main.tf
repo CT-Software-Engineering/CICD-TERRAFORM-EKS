@@ -48,19 +48,20 @@ module "eks" {
     }
   }
   tags = {
-    Environment = "dev"
+    Environment = "prod"
     Terraform   = "true"
   }
 }
 
-# data "aws_eks_cluster" "awake {
-#   name = module.eks.cluster_name
-# }
-
+/* data "aws_eks_cluster" "awake {
+   name = module.eks.cluster_name
+}
+*/
+/*
 data "aws_eks_cluster_auth" "awake" {
   name = module.eks.cluster_name
 }
-
+*/
 
 
 
