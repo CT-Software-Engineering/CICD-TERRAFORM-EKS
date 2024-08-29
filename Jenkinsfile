@@ -128,14 +128,12 @@ pipeline {
         
 
         
-                stage('Deploying NGINX') {
+        stage('Deploying NGINX') {
             steps {
                 script {
                     dir('EKS/configuration-files') {
                         withCredentials([string(credentialsId: 'AWS_EKS_CLUSTER_NAME', variable: 'CLUSTER_NAME')]) {
-                            // Add debug output to check cluster name
                             echo "Cluster Name: \$CLUSTER_NAME"
-                            // Check if the cluster exists
                             sh 'aws eks describe-cluster --name $CLUSTER_NAME --region ${AWS_DEFAULT_REGION}'
                             sh 'aws eks update-kubeconfig --name $CLUSTER_NAME --kubeconfig "$KUBECONFIG"'
                             sh 'kubectl apply -f deployment.yml --kubeconfig "$KUBECONFIG" --validate=false'
@@ -144,4 +142,8 @@ pipeline {
                     }
                 }
             }
-            
+        }
+
+        // Other stages...
+    }
+}
