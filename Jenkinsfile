@@ -93,7 +93,7 @@ pipeline {
            stage('Check kubeconfig') {
             steps {
                 script {
-                    sh 'ls -l "/var/lib/jenkins/workspace/EKS CICD/.kube/config"'
+                    sh 'ls -l "/var/lib/jenkins/workspace/EKS\\ CICD/.kube/config"'
                 }
             }
         }
