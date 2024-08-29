@@ -86,6 +86,9 @@ pipeline {
             steps {
                 script {
                     sh 'aws eks update-kubeconfig --name awake --kubeconfig "/var/lib/jenkins/workspace/EKS CICD/.kube/config"'
+                    sh 'cat "/var/lib/jenkins/workspace/EKS CICD/.kube/config"'
+                    sh 'aws eks update-kubeconfig --name $CLUSTER_NAME --kubeconfig "$KUBECONFIG" --verbose'
+
                 }
             }
         }
