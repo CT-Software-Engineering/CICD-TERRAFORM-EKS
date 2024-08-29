@@ -61,6 +61,11 @@ data "aws_eks_cluster_auth" "awake" {
   name = module.eks.cluster_name
 }
 
+# Install the EKS Pod Identity Agent add-on
+resource "aws_eks_addon" "pod_identity" {
+  cluster_name = aws_eks_cluster.awake
+  addon_name   = "pod-identity"
+}
 
 
 
