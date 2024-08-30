@@ -176,7 +176,7 @@ stage('Cluster Info') {
         
 
         
-        stage('Deploying NGINX') {
+                stage('Deploying NGINX') {
             steps {
                 script {
                     dir('EKS/configuration-files') {
@@ -191,4 +191,6 @@ stage('Cluster Info') {
                 }
             }
         }
+    }
+}
 
