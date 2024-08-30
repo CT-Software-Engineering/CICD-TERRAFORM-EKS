@@ -192,6 +192,3 @@ stage('Cluster Info') {
             }
         }
 
-        // Other stages...
-    }
-}
