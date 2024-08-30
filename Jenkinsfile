@@ -9,6 +9,15 @@ pipeline {
 
     stages {
         
+        stage('Get AWS STS Identity') {
+            steps {
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'AIDA4MTWG2WQ4544I3RJ6']]) {
+                    sh 'aws sts get-caller-identity'
+                }
+            }
+        }
+    }
+}
         stage('Checkout SCM') {
             steps {
                 script {
