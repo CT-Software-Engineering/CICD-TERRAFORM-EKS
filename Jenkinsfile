@@ -98,27 +98,27 @@ pipeline {
         stage('Check Permissions') {
             steps {
                 script {
-                    def kubeconfigPath = "${env.KUBECONFIG}"
-                    
+                    def kubeconfigPath = "/var/lib/jenkins/workspace/EKS CICD/.kube/config"
+            
                     // Check file existence
                     if (fileExists(kubeconfigPath)) {
                         echo "kubeconfig file exists"
                     } else {
-                        error "kubeconfig file does not exist"
-                    }
-
-                    // Check file permissions
-                    sh "ls -l ${kubeconfigPath}"
-
-                    // Ensure the file is readable
-                    sh "sudo chmod 644 ${kubeconfigPath}"
-                    sh "sudo chown jenkins:jenkins ${kubeconfigPath}"
-
-                    // Output kubeconfig file
-                    sh "cat ${kubeconfigPath}"
-                }
+                    error "kubeconfig file does not exist"
             }
+
+            // Check file permissions
+            sh "ls -l \"$kubeconfigPath\""
+
+            // Ensure the file is readable
+            sh "sudo chmod 644 \"$kubeconfigPath\""
+            sh "sudo chown jenkins:jenkins \"$kubeconfigPath\""
+
+            // Output kubeconfig file
+            sh "cat \"$kubeconfigPath\""
         }
+    }
+}
         
         stage('Cluster Info') {
             steps {
