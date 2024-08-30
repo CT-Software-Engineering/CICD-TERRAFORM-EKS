@@ -66,7 +66,7 @@ data "aws_eks_cluster_auth" "awake" {
    ]
 }
 
-# Define the IAM Role for Jenkins
+# IAM Role for Jenkins with EKS Policies Attached
 resource "aws_iam_role" "jenkins_role" {
   name = "jenkins-role"
 
@@ -95,17 +95,10 @@ resource "aws_iam_role_policy_attachment" "eks_worker_access" {
 
 resource "aws_iam_role_policy_attachment" "eks_cni_access" {
   role       = aws_iam_role.jenkins_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSCNIPolicy"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
 }
 
-# Kubernetes Provider Configuration (commented out for now)
-# provider "kubernetes" {
-#   host                   = data.aws_eks_cluster.awake.endpoint
-#   token                  = data.aws_eks_cluster_auth.awake.token
-#   cluster_ca_certificate = base64decode(data.aws_eks_cluster.awake.certificate_authority.0.data)
-# }
-
-# ClusterRoleBinding in Kubernetes
+# Kubernetes ClusterRoleBinding for Jenkins
 resource "kubernetes_cluster_role_binding" "jenkins_cluster_admin" {
   metadata {
     name = "jenkins-cluster-admin"
