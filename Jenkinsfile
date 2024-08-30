@@ -8,7 +8,6 @@ pipeline {
     }
 
     stages {
-        
         stage('Get AWS STS Identity') {
             steps {
                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'AIDA4MTWG2WQ4544I3RJ6']]) {
@@ -16,17 +15,15 @@ pipeline {
                 }
             }
         }
-    }
 
         stage('Checkout SCM') {
             steps {
                 script {
                     checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/CT-Software-Engineering/CICD-TERRAFORM-EKS.git']])
-                    
                 }
             }
         }
-        
+
         stage('Initializing Terraform') {
             steps {
                 script {
@@ -36,7 +33,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Formatting Terraform Code') {
             steps {
                 script {
@@ -46,7 +43,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Validating Terraform') {
             steps {
                 script {
@@ -56,7 +53,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Previewing the Infrastructure') {
             steps {
                 script {
@@ -67,7 +64,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Creating/Destroying an EKS Cluster') {
             steps {
                 script {
@@ -79,92 +76,85 @@ pipeline {
                 }
             }
         }
-        
-        
+
         stage('Initializing Helm') {
             steps {
                 script {
                     sh 'helm repo add bitnami https://charts.bitnami.com/bitnami'
                     sh 'helm repo update'
                     //sh "helm upgrade --install jenkins bitnami/jenkins --namespace awake --create-namespace --kubeconfig '${env.KUBECONFIG}'"
-
                 }
             }
         }
-        
-        
-        
+
         stage('Update Kubeconfig') {
             steps {
                 script {
                     sh "aws eks update-kubeconfig --name awake --kubeconfig '${env.KUBECONFIG}'"
                     sh "cat '${env.KUBECONFIG}'"
-                    
-
                 }
             }
         }
+
         stage('Check Permissions') {
             steps {
                 script {
                     def kubeconfigPath = "/var/lib/jenkins/workspace/EKS CICD/.kube/config"
-            
+
                     // Check file existence
                     if (fileExists(kubeconfigPath)) {
                         echo "kubeconfig file exists"
                     } else {
-                    error "kubeconfig file does not exist"
+                        error "kubeconfig file does not exist"
+                    }
+
+                    // Check file permissions
+                    sh "ls -l \"$kubeconfigPath\""
+
+                    // Ensure the file is readable
+                    sh "sudo chmod 644 \"$kubeconfigPath\""
+                    sh "sudo chown jenkins:jenkins \"$kubeconfigPath\""
+
+                    // Output kubeconfig file
+                    sh "cat \"$kubeconfigPath\""
+                }
             }
-
-            // Check file permissions
-            sh "ls -l \"$kubeconfigPath\""
-
-            // Ensure the file is readable
-            sh "sudo chmod 644 \"$kubeconfigPath\""
-            sh "sudo chown jenkins:jenkins \"$kubeconfigPath\""
-
-            // Output kubeconfig file
-            sh "cat \"$kubeconfigPath\""
         }
-    }
-}
-        
-stage('Cluster Info') {
-    steps {
-        script {
-            // Correct the kubeconfig path handling
-            sh 'kubectl --kubeconfig="/var/lib/jenkins/workspace/EKS CICD/.kube/config" cluster-info'
+
+        stage('Cluster Info') {
+            steps {
+                script {
+                    sh 'kubectl --kubeconfig="/var/lib/jenkins/workspace/EKS CICD/.kube/config" cluster-info'
+                }
+            }
         }
-    }
-}
-           stage('Check kubeconfig') {
+
+        stage('Check kubeconfig') {
             steps {
                 script {
                     sh "ls -l '${env.KUBECONFIG}'"
                 }
             }
         }
-         stage('Get Pods') {
+
+        stage('Get Pods') {
             steps {
                 script {
                     sh "kubectl get pods -n awake --kubeconfig '${env.KUBECONFIG}'"
                 }
             }
         }
-        
-        
-        
+
         stage('Deploying Jenkins') {
             steps {
                 script {
-                      sh "helm install jenkins bitnami/jenkins --namespace awake --create-namespace --kubeconfig '${env.KUBECONFIG}'"
+                    sh "helm install jenkins bitnami/jenkins --namespace awake --create-namespace --kubeconfig '${env.KUBECONFIG}'"
                     //sh "helm upgrade jenkins bitnami/jenkins --namespace awake --create-namespace --kubeconfig '${env.KUBECONFIG}'"
                     //sh "helm uninstall jenkins bitnami/jenkins --namespace awake --create-namespace --kubeconfig '${env.KUBECONFIG}'"
                 }
             }
         }
-        
-        
+
         stage('Verify Jenkins Deployment') {
             steps {
                 script {
@@ -173,7 +163,6 @@ stage('Cluster Info') {
                 }
             }
         }
-        
 
         stage('Deploying NGINX') {
             steps {
@@ -185,7 +174,7 @@ stage('Cluster Info') {
                             sh 'aws eks update-kubeconfig --name $CLUSTER_NAME --kubeconfig "$KUBECONFIG"'
                             sh 'kubectl apply -f deployment.yml --kubeconfig "$KUBECONFIG" --validate=false'
                             sh 'kubectl apply -f service.yml --kubeconfig "$KUBECONFIG" --validate=false'
-                         }
+                        }
                     }
                 }
             }
