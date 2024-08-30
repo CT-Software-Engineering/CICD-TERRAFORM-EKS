@@ -4,7 +4,7 @@ metadata:
   name: view-pods-nodes-binding
 subjects:
 - kind: User
-  name: Jenkins
+  name: arn:aws:iam::851725178273:user/Jenkins  # Replace with the ARN of the IAM role
   apiGroup: rbac.authorization.k8s.io
 roleRef:
   kind: ClusterRole
