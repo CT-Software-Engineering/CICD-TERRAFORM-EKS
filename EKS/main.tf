@@ -116,3 +116,18 @@ resource "kubernetes_cluster_role_binding" "jenkins_cluster_admin" {
     api_group = "rbac.authorization.k8s.io"
   }
 }
+resource "kubernetes_config_map" "aws_auth" {
+  metadata {
+    name      = "aws-auth"
+    namespace = "kube-system"
+  }
+
+  data = {
+    "mapRoles" = <<EOF
+- rolearn: arn:aws:iam::851725178273:role/jenkins-role
+  username: jenkins
+  groups:
+    - system:masters
+EOF
+  }
+}
