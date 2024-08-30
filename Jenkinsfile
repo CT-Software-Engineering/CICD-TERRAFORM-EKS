@@ -120,14 +120,14 @@ pipeline {
     }
 }
         
-        stage('Cluster Info') {
-            steps {
-                script {
-                    //def kubeconfigPath = "/var/lib/jenkins/workspace/EKS CICD/.kube/config"'
-                    sh "kubectl --kubeconfig=${env.KUBECONFIG} cluster-info"
-                }
-            }
+stage('Cluster Info') {
+    steps {
+        script {
+            // Correct the kubeconfig path handling
+            sh 'kubectl --kubeconfig="/var/lib/jenkins/workspace/EKS CICD/.kube/config" cluster-info'
         }
+    }
+}
            stage('Check kubeconfig') {
             steps {
                 script {
