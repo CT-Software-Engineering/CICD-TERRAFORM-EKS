@@ -175,8 +175,7 @@ stage('Cluster Info') {
         }
         
 
-        
-                stage('Deploying NGINX') {
+        stage('Deploying NGINX') {
             steps {
                 script {
                     dir('EKS/configuration-files') {
@@ -186,11 +185,10 @@ stage('Cluster Info') {
                             sh 'aws eks update-kubeconfig --name $CLUSTER_NAME --kubeconfig "$KUBECONFIG"'
                             sh 'kubectl apply -f deployment.yml --kubeconfig "$KUBECONFIG" --validate=false'
                             sh 'kubectl apply -f service.yml --kubeconfig "$KUBECONFIG" --validate=false'
-                        }
+                         }
                     }
                 }
             }
         }
     }
 }
-
