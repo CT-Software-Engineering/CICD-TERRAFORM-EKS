@@ -4,6 +4,7 @@ pipeline {
         AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
         AWS_DEFAULT_REGION = 'eu-west-1'
+        KUBECONFIG = "/var/lib/jenkins/workspace/EKS CICD/.kube/config"
     }
 
     stages {
@@ -63,8 +64,8 @@ pipeline {
                 script {
                     dir('EKS') {
                         // sh 'terraform $action --auto-approve'
-                        //sh 'terraform apply --auto-approve'
-                        sh 'terraform destroy --auto-approve'
+                        sh 'terraform apply --auto-approve'
+                        //sh 'terraform destroy --auto-approve'
                     }
                 }
             }
@@ -76,6 +77,8 @@ pipeline {
                 script {
                     sh 'helm repo add bitnami https://charts.bitnami.com/bitnami'
                     sh 'helm repo update'
+                    //sh "helm upgrade --install jenkins bitnami/jenkins --namespace awake --create-namespace --kubeconfig '${env.KUBECONFIG}'"
+
                 }
             }
         }
@@ -85,24 +88,57 @@ pipeline {
         stage('Update Kubeconfig') {
             steps {
                 script {
-                    sh 'aws eks update-kubeconfig --name awake --kubeconfig "/var/lib/jenkins/workspace/EKS CICD/.kube/config"'
-                    sh 'cat "/var/lib/jenkins/workspace/EKS CICD/.kube/config"'
-                    sh 'aws eks update-kubeconfig --name $CLUSTER_NAME --kubeconfig "$KUBECONFIG" --verbose'
+                    sh "aws eks update-kubeconfig --name awake --kubeconfig '${env.KUBECONFIG}'"
+                    sh "cat '${env.KUBECONFIG}'"
+                    
 
+                }
+            }
+        }
+        stage('Check Permissions') {
+            steps {
+                script {
+                    def kubeconfigPath = "${env.KUBECONFIG}"
+                    
+                    // Check file existence
+                    if (fileExists(kubeconfigPath)) {
+                        echo "kubeconfig file exists"
+                    } else {
+                        error "kubeconfig file does not exist"
+                    }
+
+                    // Check file permissions
+                    sh "ls -l ${kubeconfigPath}"
+
+                    // Ensure the file is readable
+                    sh "sudo chmod 644 ${kubeconfigPath}"
+                    sh "sudo chown jenkins:jenkins ${kubeconfigPath}"
+
+                    // Output kubeconfig file
+                    sh "cat ${kubeconfigPath}"
+                }
+            }
+        }
+        
+        stage('Cluster Info') {
+            steps {
+                script {
+                    //def kubeconfigPath = "/var/lib/jenkins/workspace/EKS CICD/.kube/config"'
+                    sh "kubectl --kubeconfig=${env.KUBECONFIG} cluster-info"
                 }
             }
         }
            stage('Check kubeconfig') {
             steps {
                 script {
-                    sh 'ls -l "/var/lib/jenkins/workspace/EKS CICD/.kube/config"'
+                    sh "ls -l '${env.KUBECONFIG}'"
                 }
             }
         }
          stage('Get Pods') {
             steps {
                 script {
-                    sh 'kubectl get pods -n awake --kubeconfig "/var/lib/jenkins/workspace/EKS CICD/.kube/config"'
+                    sh "kubectl get pods -n awake --kubeconfig '${env.KUBECONFIG}'"
                 }
             }
         }
@@ -112,9 +148,9 @@ pipeline {
         stage('Deploying Jenkins') {
             steps {
                 script {
-                      sh 'helm install jenkins bitnami/jenkins --namespace awake --create-namespace --kubeconfig "/var/lib/jenkins/workspace/EKS CICD/.kube/config"'
-                    //sh 'helm upgrade jenkins bitnami/jenkins --namespace awake --create-namespace --kubeconfig "/var/lib/jenkins/workspace/EKS CICD/.kube/config"'
-                    //sh 'helm uninstall jenkins bitnami/jenkins --namespace awake --create-namespace --kubeconfig "/var/lib/jenkins/workspace/EKS CICD/.kube/config"'
+                      sh "helm install jenkins bitnami/jenkins --namespace awake --create-namespace --kubeconfig '${env.KUBECONFIG}'"
+                    //sh "helm upgrade jenkins bitnami/jenkins --namespace awake --create-namespace --kubeconfig '${env.KUBECONFIG}'"
+                    //sh "helm uninstall jenkins bitnami/jenkins --namespace awake --create-namespace --kubeconfig '${env.KUBECONFIG}'"
                 }
             }
         }
@@ -123,8 +159,8 @@ pipeline {
         stage('Verify Jenkins Deployment') {
             steps {
                 script {
-                    sh 'kubectl get pods -n awake --kubeconfig "/var/lib/jenkins/workspace/EKS CICD/.kube/config"'
-                    sh 'kubectl get svc -n awake --kubeconfig "/var/lib/jenkins/workspace/EKS CICD/.kube/config"'
+                    sh 'kubectl get pods -n awake --kubeconfig '${env.KUBECONFIG}'"
+                    sh 'kubectl get svc -n awake --kubeconfig '${env.KUBECONFIG}'"
                 }
             }
         }
