@@ -17,7 +17,7 @@ pipeline {
             }
         }
     }
-}
+
         stage('Checkout SCM') {
             steps {
                 script {
