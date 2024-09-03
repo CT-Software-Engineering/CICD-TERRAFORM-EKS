@@ -72,8 +72,8 @@ pipeline {
                 script {
                     dir('EKS') {
                         // Uncomment the appropriate command
-                        sh 'terraform apply --auto-approve'
-                        // sh 'terraform destroy --auto-approve'
+                        //sh 'terraform apply --auto-approve'
+                         sh 'terraform destroy --auto-approve'
                     }
                 }
             }
