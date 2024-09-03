@@ -5,8 +5,9 @@ module "vpc" {
   name = "jenkins_vpc"
   cidr = var.vpc_cidr
 
-  azs            = data.aws_availability_zones.azs.names
-  public_subnets = var.public_subnets
+  azs             = data.aws_availability_zones.azs.names
+  public_subnets  = var.public_subnets
+  private_subnets = var.private_subnets
 
   enable_dns_hostnames    = true
   map_public_ip_on_launch = true
@@ -19,8 +20,11 @@ module "vpc" {
   public_subnet_tags = {
     Name = "jenkins_subnet"
   }
-}
 
+  private_subnet_tags = {
+    Name = "jenkins_subnet"
+  }
+}
 # Security Group
 module "sg" {
   source = "terraform-aws-modules/security-group/aws"
@@ -72,6 +76,7 @@ module "sg" {
   }
 }
 
+
 # EC2 Instance
 module "ec2_instance" {
   source = "terraform-aws-modules/ec2-instance/aws"
@@ -99,3 +104,8 @@ module "ec2_instance" {
     Environment = "dev"
   }
 }
+# resource "aws_instance" "jenkins_server" {
+#   # Placeholder configuration
+#   ami           = "ami-0776c814353b4814d"
+#   instance_type = "t3.medium"
+# }
