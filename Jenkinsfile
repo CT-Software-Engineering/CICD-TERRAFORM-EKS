@@ -7,14 +7,15 @@ pipeline {
         KUBECONFIG = "/var/lib/jenkins/workspace/Awake Pipeline/.kube/config"
     }
 
-    // stages {
-    //     stage('Get AWS STS Identity') {
-    //         steps {
-    //             withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'AIDA4MTWG2WQ4544I3RJ6']]) {
-    //                 sh 'aws sts get-caller-identity'
-    //             }
-    //         }
-    //     }
+    stages {
+        // Uncomment if needed
+        // stage('Get AWS STS Identity') {
+        //     steps {
+        //         withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'AIDA4MTWG2WQ4544I3RJ6']]) {
+        //             sh 'aws sts get-caller-identity'
+        //         }
+        //     }
+        // }
 
         stage('Checkout SCM') {
             steps {
@@ -59,6 +60,7 @@ pipeline {
                 script {
                     dir('EKS') {
                         sh 'terraform plan'
+                        // Uncomment if user confirmation is needed
                         // input(message: "Are you sure to proceed?", ok: "proceed")
                     }
                 }
@@ -69,9 +71,9 @@ pipeline {
             steps {
                 script {
                     dir('EKS') {
-                        // sh 'terraform $action --auto-approve'
+                        // Uncomment the appropriate command
                         sh 'terraform apply --auto-approve'
-                        //sh 'terraform destroy --auto-approve'
+                        // sh 'terraform destroy --auto-approve'
                     }
                 }
             }
@@ -82,7 +84,8 @@ pipeline {
                 script {
                     sh 'helm repo add bitnami https://charts.bitnami.com/bitnami'
                     sh 'helm repo update'
-                    //sh "helm upgrade --install jenkins bitnami/jenkins --namespace awake --create-namespace --kubeconfig '${env.KUBECONFIG}'"
+                    // Uncomment if you want to install Jenkins using Helm
+                     sh "helm upgrade --install jenkins bitnami/jenkins --namespace awake --create-namespace --kubeconfig '${env.KUBECONFIG}'"
                 }
             }
         }
@@ -149,8 +152,9 @@ pipeline {
             steps {
                 script {
                     sh "helm install jenkins bitnami/jenkins --namespace awake --create-namespace --kubeconfig '${env.KUBECONFIG}'"
-                    //sh "helm upgrade jenkins bitnami/jenkins --namespace awake --create-namespace --kubeconfig '${env.KUBECONFIG}'"
-                    //sh "helm uninstall jenkins bitnami/jenkins --namespace awake --create-namespace --kubeconfig '${env.KUBECONFIG}'"
+                    // Uncomment to upgrade or uninstall
+                    // sh "helm upgrade jenkins bitnami/jenkins --namespace awake --kubeconfig '${env.KUBECONFIG}'"
+                    // sh "helm uninstall jenkins --namespace awake --kubeconfig '${env.KUBECONFIG}'"
                 }
             }
         }
