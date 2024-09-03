@@ -7,14 +7,14 @@ pipeline {
         KUBECONFIG = "/var/lib/jenkins/workspace/Awake Pipeline/.kube/config"
     }
 
-    stages {
-        stage('Get AWS STS Identity') {
-            steps {
-                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'AIDA4MTWG2WQ4544I3RJ6']]) {
-                    sh 'aws sts get-caller-identity'
-                }
-            }
-        }
+    // stages {
+    //     stage('Get AWS STS Identity') {
+    //         steps {
+    //             withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'AIDA4MTWG2WQ4544I3RJ6']]) {
+    //                 sh 'aws sts get-caller-identity'
+    //             }
+    //         }
+    //     }
 
         stage('Checkout SCM') {
             steps {
