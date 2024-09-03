@@ -4,7 +4,7 @@ pipeline {
         AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
         AWS_DEFAULT_REGION = 'eu-west-1'
-        KUBECONFIG = "/var/lib/jenkins/workspace/EKS CICD/.kube/config"
+        KUBECONFIG = "/var/lib/jenkins/workspace/Awake Pipeline/.kube/config"
     }
 
     stages {
@@ -70,8 +70,8 @@ pipeline {
                 script {
                     dir('EKS') {
                         // sh 'terraform $action --auto-approve'
-                        //sh 'terraform apply --auto-approve'
-                        sh 'terraform destroy --auto-approve'
+                        sh 'terraform apply --auto-approve'
+                        //sh 'terraform destroy --auto-approve'
                     }
                 }
             }
@@ -99,7 +99,7 @@ pipeline {
         stage('Check Permissions') {
             steps {
                 script {
-                    def kubeconfigPath = "/var/lib/jenkins/workspace/EKS CICD/.kube/config"
+                    def kubeconfigPath = "/var/lib/jenkins/workspace/Awake Pipeline/.kube/config"
 
                     // Check file existence
                     if (fileExists(kubeconfigPath)) {
@@ -124,7 +124,7 @@ pipeline {
         stage('Cluster Info') {
             steps {
                 script {
-                    sh 'kubectl --kubeconfig="/var/lib/jenkins/workspace/EKS CICD/.kube/config" cluster-info'
+                    sh 'kubectl --kubeconfig="/var/lib/jenkins/workspace/Awake Pipeline/.kube/config" cluster-info'
                 }
             }
         }
